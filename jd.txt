@@ -1,0 +1,23 @@
+Role: GTM Engineering Intern
+
+As a GTM Engineering Intern, you will design, build, and optimize the AI-driven systems behind myNachiketa's go-to-market engine. You will leverage LLMs, AI agents, automation tools, APIs, and data systems to improve efficiency, personalization, decision-making, and growth across platforms such as Amazon, Flipkart, Meesho, Meta, Shiprocket, Delhivery, and other e-commerce channels.
+
+Responsibilities:
+- Design and develop AI-powered workflows across marketing, sales, operations, and content.
+- Build internal tools and automations that enable teams to execute faster and with greater precision.
+- Develop AI agents and automated workflows to reduce manual work across teams.
+- Automate repetitive marketing, operations, analytics, and reporting tasks.
+- Create dashboards and monitoring systems that surface actionable insights.
+- Analyze customer journeys across ecommerce and digital platforms.
+
+Key Requirements:
+- Strong interest in AI, automation, growth, and technology.
+- Understanding of APIs, data workflows, and automation platforms.
+- Ability to learn quickly and experiment independently.
+- Strong problem-solving and analytical skills.
+
+Preferred Skills:
+- Experience with LLMs such as GPT, Claude, Gemini, or open-source models.
+- Understanding of e-commerce ecosystems and marketplace operations.
+- Experience with SQL, dashboards, analytics, or data visualization tools.
+- Previous projects involving AI agents, automation, or growth engineering.

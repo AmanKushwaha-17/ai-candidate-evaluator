@@ -1,0 +1,33 @@
+# Virtual environment
+venv/
+.venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Environment variables
+.env
+
+# Streamlit cache
+.streamlit/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Data / output files
+results/
+*.xlsx
+data/results.csv
+data/*.json
+debug_output/
+
+# Secrets
+credentials.json
+token.json
+
+# Old test scripts
+test_calendar.py
