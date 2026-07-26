@@ -15,10 +15,9 @@ from src.common.ranking_utils import github_score_for_row, safe_float
 
 def rank_pre_test(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Weights: the original 5-weight scheme's resume/github/cgpa shares
-    (0.35 / 0.25 / 0.05 = 0.65 of the full budget), renormalized to sum to
-    1.0 — so a candidate isn't penalized for two dimensions that haven't
-    happened yet.
+    Weights: flat 50% resume / 40% github / 10% cgpa. Test scores are never
+    part of this formula, even if test_la/test_code already exist on the
+    incoming dataframe.
 
     Output columns: pre_test_score / pre_test_rank — never final_score/rank,
     so this can't be mistaken for the post-test result.

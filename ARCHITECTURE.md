@@ -58,7 +58,7 @@ graph TD
 * **Frontend/Backend:** [Streamlit](https://streamlit.io/) (Python)
 * **LLM Provider:** [Groq](https://groq.com/) API (Llama 3 70B model)
 * **PDF Parsing:** PyMuPDF (`fitz`)
-* **HTML Parsing:** BeautifulSoup4 (for GitHub profile scraping)
+* **GitHub Analysis:** GitHub REST API (`requests`) — profile, repo list, README, and topics
 * **Email:** Python `smtplib` / `email.mime`
 * **Scheduling:** Google Calendar API (`google-api-python-client`)
 * **Data Processing:** Pandas
@@ -73,8 +73,8 @@ This stage evaluates candidates based on their preliminary materials before they
 
 1. **Input:** User uploads a CSV/Excel file containing Candidate Name, Email, Resume Link, GitHub Link, and CGPA.
 2. **Resume Evaluation:** Downloads the PDF resume, extracts the text using PyMuPDF, and feeds it to the LLM along with the provided Job Description (JD). The LLM returns a score (out of 100) and a reasoning string.
-3. **GitHub Evaluation:** Scrapes the candidate's GitHub profile using BeautifulSoup4, extracts pinned repos and contribution stats, and evaluates it against the JD via the LLM.
-4. **Pre-test Ranking:** Calculates a weighted pre-test score using a fixed formula (Resume: 50%, GitHub: 40%, CGPA: 10%).
+3. **GitHub Evaluation:** Fetches the candidate's GitHub profile via the GitHub REST API — public repo count, followers, and the top 5 most recently pushed original repos (forks excluded), each with a cleaned README (topics + description included) — and evaluates it against the JD via the LLM.
+4. **Pre-test Ranking:** Calculates a weighted pre-test score using a fixed formula (Resume: 50%, GitHub: 40%, CGPA: 10%). A candidate with a missing or broken GitHub link/fetch gets a 30/100 floor on the GitHub component instead of a bare 0, so a blank field doesn't disproportionately tank their rank.
 5. **Email Dispatch:** The user selects the top $N$ candidates. The system uses a ThreadPoolExecutor to concurrently connect to Gmail SMTP and send personalized test link invitations to the shortlisted candidates.
 
 ### Stage 2: Post-Test Finalization
@@ -82,7 +82,7 @@ This stage evaluates candidates based on their preliminary materials before they
 This stage occurs after the shortlisted candidates have completed the external coding test.
 
 1. **Test Results Input:** User uploads the external test results (CSV/Excel) containing the candidate's unique `s_no` and their test scores (`test_code`, `test_la`).
-2. **Score Merging:** The system performs a left-join on the `s_no` to merge the new test scores with the existing shortlisted candidates from Stage 1. Unmatched candidates receive a default score of 0.
+2. **Score Merging:** The system performs a left-join on the `s_no` to merge the new test scores with the existing shortlisted candidates from Stage 1. Candidates with no matching row in the test-results sheet (did not attempt the test) receive `test_la`/`test_code` of 0, not a fallback to any other source — the Test Result sheet is the sole authority for these two fields at this stage.
 3. **Final Ranking:** Calculates the absolute final score using the comprehensive weighting schema (Resume: 35%, GitHub: 25%, CGPA: 5%, Test Code: 20%, Test LA: 15%).
 4. **Interview Scheduling:** The system creates calendar events for the top candidates via the Google Calendar API, generating Google Meet links and automatically sending calendar invites to the candidates and the interviewer.
 
@@ -107,8 +107,10 @@ student_Evaluation_Platform/
     │   ├── emailing/
     │   │   └── sender.py       # SMTP logic for bulk-sending test links
     │   ├── github_evaluation/
-    │   │   ├── pipeline.py     # Controls HTML scraping & LLM rating for GitHub
-    │   │   └── scraper.py      # BeautifulSoup logic to extract GitHub pins & stats
+    │   │   ├── fetcher.py      # GitHub REST API client — profile, repos, README, topics
+    │   │   ├── evaluator.py    # LLM scoring of the fetched GitHub data against the JD
+    │   │   ├── models.py       # Pydantic models: GitHubProfileData, GitHubRepo, GitHubEvaluation
+    │   │   └── pipeline.py     # Per-candidate fetch + evaluate orchestration
     │   ├── ranking/
     │   │   └── pre_test_ranker.py # Calculates the 50/40/10 pre-test score
     │   └── resume_evaluation/
