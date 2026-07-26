@@ -26,11 +26,9 @@ def rank_pre_test(df: pd.DataFrame) -> pd.DataFrame:
     if df.empty:
         return df
 
-    base_weights = {"resume": 0.35, "github": 0.25, "cgpa": 0.05}
-    weight_sum = sum(base_weights.values())
-    w_resume = base_weights["resume"] / weight_sum
-    w_github = base_weights["github"] / weight_sum
-    w_cgpa = base_weights["cgpa"] / weight_sum
+    w_resume = 0.50
+    w_github = 0.40
+    w_cgpa = 0.10
 
     scores = []
     for _, row in df.iterrows():
